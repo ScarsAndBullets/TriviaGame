@@ -44,13 +44,12 @@ var countries = [
 		name: "England",
 		capital: "London",
 		cities: ["Manchester", "Liverpool", "York"]
-	})(
-		(zimbabwe = {
-			name: "Zimbabwe",
-			capital: "Harare",
-			cities: ["Bulawayo", "Chitungwiza", "Mutare"]
-		})
-	)
+	}),
+	(zimbabwe = {
+		name: "Zimbabwe",
+		capital: "Harare",
+		cities: ["Bulawayo", "Chitungwiza", "Mutare"]
+	})
 ];
 
 //timer variables
