@@ -44,7 +44,13 @@ var countries = [
 		name: "England",
 		capital: "London",
 		cities: ["Manchester", "Liverpool", "York"]
-	})
+	})(
+		(zimbabwe = {
+			name: "Zimbabwe",
+			capital: "Harare",
+			cities: ["Bulawayo", "Chitungwiza", "Mutare"]
+		})
+	)
 ];
 
 //timer variables
@@ -125,7 +131,7 @@ function timeRanOut() {
 		} is ${countries[countryNum].capital}.`
 	);
 	incorrect++;
-	setTimeout(question, 5000);
+	setTimeout(question, 2000);
 }
 
 //picks unique country from array
@@ -195,7 +201,7 @@ function validateAnswer() {
 	$("#score").html(`<h1 class="display-4">Your answers:</h1>
 		<hr>Correct - ${correct}<br>Incorrect - ${incorrect}`);
 	$("#timer").empty();
-	setTimeout(question, 3000);
+	setTimeout(question, 2000);
 }
 //Fisher-Yates Shuffle from: https://javascript.info/task/shuffle, applied to shuffle my answers
 function shuffle(array) {
@@ -208,7 +214,8 @@ function shuffle(array) {
 
 function gameOver() {
 	//show score, button to restart (run function startup())
-	var gameOver = `<h1>Your final score: ${correct} out of ${incorrect}. Try again?</h1><button type="button" class="btn btn-primary btn-lg">Start</button>`;
+	var gameOver = `<h1>Your final score: ${correct} out of ${correct +
+		incorrect}. Try again?</h1><button type="button" class="btn btn-primary btn-lg">Start</button>`;
 	$("#main").html(gameOver);
 	$(".btn").click(secondStart);
 }
