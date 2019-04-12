@@ -66,6 +66,7 @@ $(document).ready(startUp);
 
 //dynamically loads start screen and prompts user to start the game
 function startUp() {
+	console.log("startUp");
 	correct = 0;
 	incorrect = 0;
 	var mainContent = `<h1>To begin playing, click the start button. You will have ${questionTime} seconds to answer each question.</h1><button type="button" class="btn btn-primary btn-lg">Start</button>`;
@@ -74,6 +75,7 @@ function startUp() {
 }
 
 function question() {
+	console.log("question");
 	//Determin which country will be used for the question and stores it
 	countryNum = pickCountry();
 	pickedCountries.push(countries[countryNum].name);
@@ -84,8 +86,7 @@ function question() {
 
 	//Builds question screen layout
 	var layout = `<div class="row"><div class="col-lg-8" id="left"></div><div class="col-lg-4" id="right"></div></div><div class="row" id="answers"></div>`;
-	$("#main").empty();
-	$("#main").append(layout);
+	$("#main").html(layout);
 
 	//Displays questions
 	$("#left").append(
@@ -104,15 +105,18 @@ function question() {
 }
 
 function timer() {
+	console.log("timer");
 	if (questionTime <= 0) {
 		clearInterval(questionTimer);
 		timeRanOut();
 	} else {
 		$("#timer").text(`Time left: ${questionTime}`);
+		questionTime--;
 	}
 }
 
 function timeRanOut() {
+	console.log("timeRanOut");
 	$("#timer").text(`Time's up!`);
 	$("#answers").empty();
 	$("#left").html(
@@ -126,6 +130,7 @@ function timeRanOut() {
 
 //picks unique country from array
 function pickCountry() {
+	console.log("pickCountry");
 	if (pickedCountries.length < countries.length) {
 		var unique = false;
 		while (!unique) {
@@ -145,6 +150,7 @@ function pickCountry() {
 }
 
 function loadAnswers() {
+	console.log("loadAnswers");
 	var answers = [];
 	answers.push(countries[countryNum].capital);
 	for (var i = 0; i < countries[countryNum].cities.length; i++) {
@@ -153,39 +159,44 @@ function loadAnswers() {
 	answers = shuffle(answers);
 	var answersHTML = "";
 	for (var j = 0; j < answers.length; j++) {
-		answersHTML += `<button type="button" class="btn btn-light" id="answer${j}">${
+		answersHTML += `<button type="button" class="btn btn-light" id="answer${j}" value="${
 			answers[j]
-		}</button>`;
+		}">${answers[j]}</button>`;
 	}
-	console.log(`answersHTML:  ${answersHTML}`);
+	// $("#answers").append(answersHTML);
+	//console.log(`answersHTML:  ${answersHTML}`);
 	$("#answers").html(answersHTML);
-	$("#answer0").click(validateAnswer(answers[0]));
-	$("#answer1").click(validateAnswer(answers[1]));
-	$("#answer2").click(validateAnswer(answers[2]));
-	$("#answer3").click(validateAnswer(answers[3]));
+	$("#answer0").click(validateAnswer);
+	$("#answer1").click(validateAnswer);
+	$("#answer2").click(validateAnswer);
+	$("#answer3").click(validateAnswer);
 }
 
-function validateAnswer(input) {
+function validateAnswer() {
+	console.log(this.value);
+	var input = this.value;
 	clearInterval(questionTimer);
 	$("#answers").empty();
 	if (countries[countryNum].capital === input) {
 		correct++;
 		$("#left").html(
-			`<h1>That is correct! ${
+			`<h1>That is <strong>CORRECT!</strong> ${
 				countries[countryNum].capital
-			} is the captial of ${countries[countryNum].name}.`
+			} is the capital of ${countries[countryNum].name}.`
 		);
 	} else {
 		incorrect++;
 		$("#left").html(
-			`<h1>${input} is incorrect, ${
+			`<h1>${input} is <strong>INCORRECT</strong>, ${
 				countries[countryNum].capital
-			} is the captial of ${countries[countryNum].name}.`
+			} is the capital of ${countries[countryNum].name}.`
 		);
 	}
-	setTimeout(question, 5000);
+	$("#score").html(`<h1 class="display-4">Your answers:</h1>
+		<hr>Correct - ${correct}<br>Incorrect - ${incorrect}`);
+	$("#timer").empty();
+	setTimeout(question, 3000);
 }
-
 //Fisher-Yates Shuffle from: https://javascript.info/task/shuffle, applied to shuffle my answers
 function shuffle(array) {
 	for (let i = array.length - 1; i > 0; i--) {
@@ -197,5 +208,13 @@ function shuffle(array) {
 
 function gameOver() {
 	//show score, button to restart (run function startup())
-	//Set timeout then run function startup()
+	var gameOver = `<h1>Your final score: ${correct} out of ${incorrect}. Try again?</h1><button type="button" class="btn btn-primary btn-lg">Start</button>`;
+	$("#main").html(gameOver);
+	$(".btn").click(secondStart);
+}
+
+function secondStart() {
+	correct = 0;
+	incorrect = 0;
+	question();
 }
